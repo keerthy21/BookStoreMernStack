@@ -7,9 +7,14 @@ import DeleteBook from './pages/books/DeleteBook'
 import ShowBook from './pages/books/ShowBook'
 import Signup from './pages/authentication/Signup'
 import Login from './pages/authentication/Login'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
  const App = () => {
   return (
+    <div className="App">
+    {/* Other components */}
+ 
 <Routes>
   <Route path ='/' element ={<Home/>}/>
   <Route path ='/books/create' element ={<CreateBooks/>}/>
@@ -18,8 +23,10 @@ import Login from './pages/authentication/Login'
   <Route path ='/books/delete/:id' element ={<DeleteBook/>}/>
   <Route path ='/signup' element ={<Signup/>}/>
   <Route path ='/login' element ={<Login/>}/>
+ 
 
-
-</Routes>  )
+</Routes> 
+<ToastContainer />
+</div> )
 }
 export default App

@@ -34,6 +34,7 @@ useEffect(()=>{
  const handleEditBook  = () =>{
   const data ={title,author,publishYear};
   setLoading(true);
+  axios.defaults.withCredentials = true;
   axios.put(` http://localhost:5555/books/${id}`,data)
   .then(() =>{
     setLoading(false);

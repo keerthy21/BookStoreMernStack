@@ -10,7 +10,7 @@ const ShowBook = () => {
   const [loading, setLoading] = useState(false);
   const { id} =useParams();
   useEffect(() => {
-
+    axios.defaults.withCredentials = true;
 
     setLoading(true);
     axios.get(` http://localhost:5555/books/${id}`)

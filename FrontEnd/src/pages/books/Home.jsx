@@ -14,6 +14,8 @@ const Home = () => {
 
   useEffect(() => {
     setLoading(true);
+        axios.defaults.withCredentials = true;
+
     axios.get('http://localhost:5555/books')
       .then((response) => {
 

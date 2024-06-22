@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
  const handleSaveBook  = () =>{
   const data ={title,author,publishYear};
   setLoading(true);
+  axios.defaults.withCredentials = true;
   axios.post('http://localhost:5555/books/',data)
   .then(() =>{
     setLoading(false);

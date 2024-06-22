@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, {  useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -11,20 +11,17 @@ const Signup = () => {
     const [username, setUserName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isChecked, setIsChecked] = useState(false);
     const navigate = useNavigate();
 
 
-    useEffect(() => {
-        toast.info('gggg');
-        toast("Hello Geeks");
-    }, []);
+
 
     const handleSubmit = (e) => {
-
-        const data = { username, email, password };
+        const data = { username, email, password }
         e.preventDefault()
-
-
+       {isChecked ? (
+        
         axios.post(`http://localhost:5555/auth/signup/`, data)
             .then(response => {
                 if (response.status == 200) { navigate('/login') }
@@ -32,19 +29,15 @@ const Signup = () => {
 
             .catch(error => {
                 if (error.response.status == 400) {
-                    console.log('keerthyyy2')
-                    toast
-
-
-                    toast.error(error.response.data.message)
+                   toast.error(error.response.data.message)
                 } else {
-                    console.log('keerthyyy3')
-
-
-
-                }
-                console.log(error)
+                    
+                    console.log(error)}
             })
+       ) :(
+        toast.error('Please Select Checkbox')
+       )} 
+       
     }
 
     return (
@@ -93,6 +86,7 @@ const Signup = () => {
                         id="newsletter"
                         type="checkbox"
                         className="w-4 h-4 text-sky-400 border-gray-300 rounded focus:ring-sky-400 focus:outline-none"
+                        onChange={(e) =>setIsChecked(e.target.checked)}
                     />
                     <label className="ml-2 text-xl text-gray-500" htmlFor="newsletter">
                         Subscribe to our newsletter
