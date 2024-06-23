@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react'
-import axios from 'axios';
+import axiosInstance from '../../utils/axiosInstance';
 import Spinner from '../../components/Spinner';
 import BackButton from '../../components/BackButton';
 import { useNavigate ,useParams} from 'react-router-dom';
@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 const {id} = useParams();
 useEffect(()=>{
  
-  axios.get(` http://localhost:5555/books/${id}`)
+  axiosInstance.get(`/books/${id}`)
   .then((response)=>{
     setAuthor(response.data.author);
     setTitle(response.data.title);
@@ -41,8 +41,7 @@ useEffect(()=>{
 
  const handleEditBook  = () =>{
   const data ={title,author,publishYear};
-  axios.defaults.withCredentials = true;
-  axios.put(` http://localhost:5555/books/${id}`,data)
+  axiosInstance.put(`/books/${id}`,data)
   .then(() =>{
    
     navigate('/');

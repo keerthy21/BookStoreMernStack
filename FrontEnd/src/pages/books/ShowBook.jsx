@@ -1,9 +1,10 @@
 import React, { useRef } from 'react'
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import BackButton from '../../components/BackButton';
+import axiosInstance from '../../utils/axiosInstance';
 import { useParams } from 'react-router-dom';
 import Header from '../../components/Header';
+import BackButton from '../../components/BackButton';
+
 
 const ShowBook = () => {
   const [book, setBook] = useState([]);
@@ -14,14 +15,13 @@ const ShowBook = () => {
   const [reviews, setReviews] = useState([]); // State for existing reviews
   const { id } = useParams();
   useEffect(() => {
-    axios.defaults.withCredentials = true;
-    axios.get(` http://localhost:5555/books/${id}`)
+    axiosInstance.get(`/books/${id}`)
       .then((response) => {
         const username = localStorage.getItem('username');
         setBook(response.data);
         bookiid.current = response.data._id;
         setName(username);
-        return axios.get(`http://localhost:5555/books/reviews/${bookiid.current}`);
+        return axiosInstance.get(`/books/reviews/${bookiid.current}`);
 
       }).then((response) => {
         setReviews(response.data)
@@ -40,8 +40,8 @@ const ShowBook = () => {
   const handleSubmitReview = () => {
     const bookid = bookiid.current
     const data = { bookid, rating, review, name };
-    axios.defaults.withCredentials = true;
-    axios.post('http://localhost:5555/books/review', data)
+   
+    axiosInstance.post('/books/review', data)
       .then((response) => { console.log(response) }
       ).catch(error => {
         if (error.response.status == 400) {

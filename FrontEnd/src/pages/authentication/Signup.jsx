@@ -1,8 +1,8 @@
 import React, {  useState } from 'react'
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import axiosInstance from '../../utils/axiosInstance';
 
 
 
@@ -22,7 +22,7 @@ const Signup = () => {
         e.preventDefault()
        {isChecked ? (
         
-        axios.post(`http://localhost:5555/auth/signup/`, data)
+        axiosInstance.post(`/auth/signup/`, data)
             .then(response => {
                 if (response.status == 200) { navigate('/login') }
             })

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState, useRef } from 'react';
-import axios from 'axios';
+import axiosInstance from '../../utils/axiosInstance';
 import { Await, Link } from 'react-router-dom';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { BsInfoCircle } from 'react-icons/bs';
@@ -19,14 +19,15 @@ const Home = () => {
   const currentPage = useRef(1);
   const searchTerm = useRef('');
   const filterAuthor = useRef('');
+  const [isSortEnabled, setIsSortEnabled] = useState(false);
+  const sortOrder = useRef('asc');
 
 
 
 
 
   useEffect(() => {
-    axios.defaults.withCredentials = true;
-    axios.get('http://localhost:5555/books/authors')
+    axiosInstance.get('/books/authors')
       .then((response) => {
         setAuthors(response.data.data)
       })
@@ -49,7 +50,8 @@ const Home = () => {
     filterAuthor.current = event.target.value;
     currentPage.current = 1;
     searchTerm.current = ''
-    fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current).then((response) => {
+    const temsortparam  =isSortEnabled ? sortOrder.current:'';
+    fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current,temsortparam).then((response) => {
       setBooks(response.data)
       setAuthorized(response.authorized)
       setTotalPage(response.totalPages)
@@ -60,14 +62,16 @@ const Home = () => {
 
   }
 
-  const [sortOrder, setSortOrder] = useState('asc');
-
-
-
-  const handleSearchButtonClick = () => {
+  const handleSearchButtonClick = (event) => {
+    event.preventDefault();
+  
+    const inputValue = event.target.elements.searchInput.value;
     filterAuthor.current = '';
     currentPage.current = 1;
-    fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current).then((response) => {
+    searchTerm.current = inputValue;
+    const temsortparam  =isSortEnabled ? sortOrder.current:'';
+    document.getElementById('dropdown').value = ''; 
+    fetchBooks(currentPage.current, 10, inputValue, filterAuthor.current,temsortparam).then((response) => {
       setBooks(response.data)
       setAuthorized(response.authorized)
       setTotalPage(response.totalPages)
@@ -79,8 +83,8 @@ const Home = () => {
   const
     handlePrevious = () => {
       currentPage.current = currentPage.current - 1;
-      console.log('previous', currentPage.current)
-      fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current).then((response) => {
+      const temsortparam  =isSortEnabled ? sortOrder.current:'';
+      fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current,temsortparam).then((response) => {
         setBooks(response.data)
         setAuthorized(response.authorized)
         setTotalPage(response.totalPages)
@@ -89,14 +93,33 @@ const Home = () => {
     }
   const handleNext = async () => {
     currentPage.current = currentPage.current + 1;
+    const temsortparam  =isSortEnabled ? sortOrder.current:'';
     console.log('next', currentPage.current);
-    fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current).then((response) => {
+    fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current,temsortparam).then((response) => {
       setBooks(response.data);
       setAuthorized(response.authorized);
       setTotalPage(response.totalPages)
 
     });
   }
+
+   // Function to toggle sorting order if sorting is enabled
+   const handleSortToggle = () => {
+    currentPage.current = 1;
+    
+    if (isSortEnabled) {
+      const temporanysort = (sortOrder.current === 'asc' ? 'desc' : 'asc');
+      fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current,temporanysort ).then((response) => {
+        setBooks(response.data);
+        setAuthorized(response.authorized);
+        setTotalPage(response.totalPages)
+  
+      });
+      sortOrder.current = temporanysort ;
+      console.log(sortOrder.current);
+    }
+  };
+
 
 
   return (
@@ -113,25 +136,29 @@ const Home = () => {
       </div>
       <div class='flex justify-between items-center mb-4'>
         <div class='flex'>
+          <form onSubmit={handleSearchButtonClick}>
           <input
             type='text'
             placeholder='Search'
+            id='searchInput' 
+            name='searchInput' 
             onChange={(e) => (searchTerm.current = e.target.value)}
-            class='border border-black rounded-l px-4 py-2'
-          />
-          <button class='bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-r px-4 py-2'
-            onClick={handleSearchButtonClick}>
+            class='border border-black rounded-l px-4 py-2'/>
+            
+          <button class='bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-r px-4 py-2'>
             Search
           </button>
+          </form>
+        
         </div>
 
         <div class='ml-4'>
           <label class='mr-2'>Filter by Author:</label>
-          <select id='dropdown' name='options' class='border border-black rounded px-2 py-1'
-            onChange={handlFilterAuthor}>
-            <option value=''>Author</option>
-            {authors.map(author => (<option value={author}>{author}</option>))}
-          </select>
+            <select id='dropdown' name='options' class='border border-black rounded px-2 py-1'
+              onChange={handlFilterAuthor}>
+              <option value=''>Author</option>
+              {authors.map(author => (<option value={author}>{author}</option>))}
+            </select>
         </div>
       </div>
 
@@ -141,11 +168,20 @@ const Home = () => {
             <th className='border border-slate-600 rounded-md'>No</th>
             <th className='border border-slate-600 rounded-md'>Title</th>
             <th className='border border-slate-600 rounded-md max-md:hidden'>Author</th>
-            <th
-              className='border border-slate-600 rounded-md max-md:hidden cursor-pointer'
-
-            >
+            <th className='border border-slate-600 rounded-md max-md:hidden cursor-pointer'>
               Publish Year
+
+              <input
+                type='checkbox'
+                checked={isSortEnabled}
+                onChange={() => setIsSortEnabled(!isSortEnabled)}
+                className='ml-2'
+              />
+              {isSortEnabled && (
+                <button onClick={handleSortToggle}>
+                  {sortOrder.current === 'asc' ? '▲' : '▼'}
+                </button>
+              )}
 
             </th>
             {authorized && <th className='border border-slate-600 rounded-md'>Operations</th>}

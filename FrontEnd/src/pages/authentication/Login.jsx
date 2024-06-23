@@ -1,22 +1,21 @@
 import React, { useState } from 'react'
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import axiosInstance from '../../utils/axiosInstance';
 
 const Login = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  axios.defaults.withCredentials = true;
 
   const handleSubmit = (e) => {
     console.log(import.meta.env.VITE_API_URL);
 
     const data = { email, password };
     e.preventDefault()
-    axios.post(`http://localhost:5555/auth/login/`, data)
+    axiosInstance.post(`/auth/login/`, data)
       .then(response => {
         console.log(response)
         console.log(response.data.user)

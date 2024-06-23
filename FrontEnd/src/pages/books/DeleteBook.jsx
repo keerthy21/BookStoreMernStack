@@ -1,18 +1,16 @@
 
 import React, { useState } from 'react'
-import axios from 'axios';
-import Spinner from '../../components/Spinner';
+import axiosInstance from '../../utils/axiosInstance';
 import BackButton from '../../components/BackButton';
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../../components/Header';
 
 const DeleteBook = () => {
-  axios.defaults.withCredentials = true;
   const navigate = useNavigate();
   const { id } = useParams();
   const handleDeleteBook = () => {
-    axios
-      .delete(`http://localhost:5555/books/${id}`)
+    axiosInstance
+      .delete(`/books/${id}`)
       .then(() => {
         navigate('/');
       })

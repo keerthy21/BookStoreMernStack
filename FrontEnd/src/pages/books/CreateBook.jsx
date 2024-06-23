@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import axios from 'axios';
 import BackButton from '../../components/BackButton';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Header from '../../components/Header';
+import axiosInstance from '../../utils/axiosInstance';
+
 
 const CreateBooks = () => {
   const [title, setTitle] = useState('');
@@ -12,8 +13,8 @@ const CreateBooks = () => {
   const navigate = useNavigate();
   const handleSaveBook = () => {
     const data = { title, author, publishYear };
-    axios.defaults.withCredentials = true;
-    axios.post('http://localhost:5555/books/', data)
+   
+    axiosInstance.post('/books/', data)
       .then(() => {
         navigate('/');
 
