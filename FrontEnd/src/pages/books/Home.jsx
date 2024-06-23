@@ -52,6 +52,8 @@ const Home = () => {
     fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current).then((response) => {
       setBooks(response.data)
       setAuthorized(response.authorized)
+      setTotalPage(response.totalPages)
+
 
     });
 
@@ -70,6 +72,8 @@ const Home = () => {
     fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current).then((response) => {
       setBooks(response.data)
       setAuthorized(response.authorized)
+      setTotalPage(response.totalPages)
+
 
     });
   }
@@ -81,6 +85,8 @@ const Home = () => {
       fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current).then((response) => {
         setBooks(response.data)
         setAuthorized(response.authorized)
+        setTotalPage(response.totalPages)
+
       });
     }
   const handleNext = async () => {
@@ -89,6 +95,8 @@ const Home = () => {
     fetchBooks(currentPage.current, 10, searchTerm.current,filterAuthor.current).then((response) => {
       setBooks(response.data);
       setAuthorized(response.authorized);
+      setTotalPage(response.totalPages)
+
     });
   }
 

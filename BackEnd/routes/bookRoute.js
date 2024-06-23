@@ -2,6 +2,7 @@ import express from "express";
 import { Book } from "../models/bookModels.js"
 import authMiddleware from "../middleware/auth.js";
 import jwt from 'jsonwebtoken';
+import { Review } from "../models/reviewModel.js";
 
 const router = express.Router()
 
@@ -45,7 +46,7 @@ router.get('/', async (request, response) => {
 
         // Search AND FILTER
         let searchFilter = {};
-        let searchQuery ='';
+        let searchQuery = '';
         if (request.query.search) {
             searchQuery = request.query.search;
             searchFilter = {
@@ -55,12 +56,12 @@ router.get('/', async (request, response) => {
                 ]
             };
         }
-        else if(request.query.filter){
-            searchQuery =request.query.filter
-             searchFilter = {
+        else if (request.query.filter) {
+            searchQuery = request.query.filter
+            searchFilter = {
                 author: { $eq: searchQuery }  // Exact match for author
             };
-        }else{
+        } else {
 
         }
 
@@ -184,6 +185,54 @@ router.delete('/:id', async (request, response) => {
     catch (error) {
         console.log(error.message);
         return response.status(500).send({ message: error.message });
+    }
+})
+
+
+//review routes
+// save review
+router.post('/review', async (request, response) => {
+    try {
+        if (!request.body.review &&
+            !request.body.rating) {
+            return response.status(400).send({ message: 'Please Send review or rating'})
+        }
+        const newReview = {
+            bookid: request.body.bookid,
+            name: request.body.name,
+            rating: request.body.rating,
+            review: request.body.review
+        }
+
+        const review = await Review.create(newReview)
+        return response.status(200).send({sucess})
+
+    }
+    catch (error) {
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
+    }
+})
+
+// get reviews by bookid
+router.get('/reviews/:id', async (request, response) => {
+    try {
+        const { id } = request.params
+        const book = await Book.findById(id);
+        const reviews = await Review.find({ bookid: id });
+        
+        if (!reviews) {
+            return response.status(200).send({ message: 'No reviews' })
+
+        } else {
+            return response.status(200).json(reviews)
+        }
+
+
+    } catch (error) {
+        console.log({ message: error.message });
+        return response.status(500).send({ message: error.message })
+
     }
 })
 
