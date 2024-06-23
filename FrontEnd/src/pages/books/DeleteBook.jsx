@@ -30,7 +30,7 @@ const DeleteBook = () => {
 
   return (
     <div className='p-4'>
-       <Header isauthorized={true} />
+      <Header isauthorized={true} />
       <BackButton />
       <h1 className='text-3x1 my-4'>Delete Book</h1>
       <div className='flex flex-col items-center border-2 border-sky-400 rounded-x1 w-[600px] p-8 mx-auto'>

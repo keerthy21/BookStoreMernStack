@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const reviewSchema  = mongoose.Schema(
+const reviewSchema = mongoose.Schema(
     {
         bookid: {
             type: String,
@@ -17,11 +17,10 @@ const reviewSchema  = mongoose.Schema(
         },
         review: {
             type: String
-        }},
-        {timestamps: true,  }
-    
-
+        }
+    },
+    { timestamps: true, }
 );
 
 
-export const Review = mongoose.model('Review    ',reviewSchema)
+export const Review = mongoose.model('Review    ', reviewSchema)

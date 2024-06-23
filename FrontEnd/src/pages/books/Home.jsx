@@ -50,8 +50,8 @@ const Home = () => {
     filterAuthor.current = event.target.value;
     currentPage.current = 1;
     searchTerm.current = ''
-    const temsortparam  =isSortEnabled ? sortOrder.current:'';
-    fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current,temsortparam).then((response) => {
+    const temsortparam = isSortEnabled ? sortOrder.current : '';
+    fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current, temsortparam).then((response) => {
       setBooks(response.data)
       setAuthorized(response.authorized)
       setTotalPage(response.totalPages)
@@ -64,14 +64,14 @@ const Home = () => {
 
   const handleSearchButtonClick = (event) => {
     event.preventDefault();
-  
+
     const inputValue = event.target.elements.searchInput.value;
     filterAuthor.current = '';
     currentPage.current = 1;
     searchTerm.current = inputValue;
-    const temsortparam  =isSortEnabled ? sortOrder.current:'';
-    document.getElementById('dropdown').value = ''; 
-    fetchBooks(currentPage.current, 10, inputValue, filterAuthor.current,temsortparam).then((response) => {
+    const temsortparam = isSortEnabled ? sortOrder.current : '';
+    document.getElementById('dropdown').value = '';
+    fetchBooks(currentPage.current, 10, inputValue, filterAuthor.current, temsortparam).then((response) => {
       setBooks(response.data)
       setAuthorized(response.authorized)
       setTotalPage(response.totalPages)
@@ -83,8 +83,8 @@ const Home = () => {
   const
     handlePrevious = () => {
       currentPage.current = currentPage.current - 1;
-      const temsortparam  =isSortEnabled ? sortOrder.current:'';
-      fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current,temsortparam).then((response) => {
+      const temsortparam = isSortEnabled ? sortOrder.current : '';
+      fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current, temsortparam).then((response) => {
         setBooks(response.data)
         setAuthorized(response.authorized)
         setTotalPage(response.totalPages)
@@ -93,9 +93,9 @@ const Home = () => {
     }
   const handleNext = async () => {
     currentPage.current = currentPage.current + 1;
-    const temsortparam  =isSortEnabled ? sortOrder.current:'';
+    const temsortparam = isSortEnabled ? sortOrder.current : '';
     console.log('next', currentPage.current);
-    fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current,temsortparam).then((response) => {
+    fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current, temsortparam).then((response) => {
       setBooks(response.data);
       setAuthorized(response.authorized);
       setTotalPage(response.totalPages)
@@ -103,19 +103,19 @@ const Home = () => {
     });
   }
 
-   // Function to toggle sorting order if sorting is enabled
-   const handleSortToggle = () => {
+  // Function to toggle sorting order if sorting is enabled
+  const handleSortToggle = () => {
     currentPage.current = 1;
-    
+
     if (isSortEnabled) {
       const temporanysort = (sortOrder.current === 'asc' ? 'desc' : 'asc');
-      fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current,temporanysort ).then((response) => {
+      fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current, temporanysort).then((response) => {
         setBooks(response.data);
         setAuthorized(response.authorized);
         setTotalPage(response.totalPages)
-  
+
       });
-      sortOrder.current = temporanysort ;
+      sortOrder.current = temporanysort;
       console.log(sortOrder.current);
     }
   };
@@ -137,28 +137,28 @@ const Home = () => {
       <div class='flex justify-between items-center mb-4'>
         <div class='flex'>
           <form onSubmit={handleSearchButtonClick}>
-          <input
-            type='text'
-            placeholder='Search'
-            id='searchInput' 
-            name='searchInput' 
-            onChange={(e) => (searchTerm.current = e.target.value)}
-            class='border border-black rounded-l px-4 py-2'/>
-            
-          <button class='bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-r px-4 py-2'>
-            Search
-          </button>
+            <input
+              type='text'
+              placeholder='Search'
+              id='searchInput'
+              name='searchInput'
+              onChange={(e) => (searchTerm.current = e.target.value)}
+              class='border border-black rounded-l px-4 py-2' />
+
+            <button class='bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-r px-4 py-2'>
+              Search
+            </button>
           </form>
-        
+
         </div>
 
         <div class='ml-4'>
           <label class='mr-2'>Filter by Author:</label>
-            <select id='dropdown' name='options' class='border border-black rounded px-2 py-1'
-              onChange={handlFilterAuthor}>
-              <option value=''>Author</option>
-              {authors.map(author => (<option value={author}>{author}</option>))}
-            </select>
+          <select id='dropdown' name='options' class='border border-black rounded px-2 py-1'
+            onChange={handlFilterAuthor}>
+            <option value=''>Author</option>
+            {authors.map(author => (<option value={author}>{author}</option>))}
+          </select>
         </div>
       </div>
 

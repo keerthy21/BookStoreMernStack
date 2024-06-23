@@ -61,13 +61,13 @@ router.get('/', async (request, response) => {
             searchFilter = {
                 author: { $eq: searchQuery }  // Exact match for author
             };
-        } else {}
-           // Sorting
-           let sortBy = {};
-           if (request.query.sort === 'asc' || request.query.sort === 'desc') {
-               sortBy = { publishYear: request.query.sort === 'asc' ? 1 : -1 };
-           }
-          
+        } else { }
+        // Sorting
+        let sortBy = {};
+        if (request.query.sort === 'asc' || request.query.sort === 'desc') {
+            sortBy = { publishYear: request.query.sort === 'asc' ? 1 : -1 };
+        }
+
 
         // Query options for pagination and searching
         const options = {
@@ -76,8 +76,8 @@ router.get('/', async (request, response) => {
             collation: { locale: 'en' }, // Optional: for case insensitive search
         };
 
-           // Apply sorting if sortBy is defined
-           if (Object.keys(sortBy).length !== 0) {
+        // Apply sorting if sortBy is defined
+        if (Object.keys(sortBy).length !== 0) {
             options.sort = sortBy;
         }
         console.log(sortBy);

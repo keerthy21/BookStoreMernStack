@@ -35,12 +35,12 @@ const ShowBook = () => {
       });
   }, [])
 
-  
- 
+
+
   const handleSubmitReview = () => {
     const bookid = bookiid.current
     const data = { bookid, rating, review, name };
-   
+
     axiosInstance.post('/books/review', data)
       .then((response) => { console.log(response) }
       ).catch(error => {

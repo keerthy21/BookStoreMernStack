@@ -1,4 +1,4 @@
-import React, {  useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -14,30 +14,30 @@ const Signup = () => {
     const [isChecked, setIsChecked] = useState(false);
     const navigate = useNavigate();
 
-
-
-
     const handleSubmit = (e) => {
         const data = { username, email, password }
         e.preventDefault()
-       {isChecked ? (
-        
-        axiosInstance.post(`/auth/signup/`, data)
-            .then(response => {
-                if (response.status == 200) { navigate('/login') }
-            })
+        {
+            isChecked ? (
 
-            .catch(error => {
-                if (error.response.status == 400) {
-                   toast.error(error.response.data.message)
-                } else {
-                    
-                    console.log(error)}
-            })
-       ) :(
-        toast.error('Please Select Checkbox')
-       )} 
-       
+                axiosInstance.post(`/auth/signup/`, data)
+                    .then(response => {
+                        if (response.status == 200) { navigate('/login') }
+                    })
+
+                    .catch(error => {
+                        if (error.response.status == 400) {
+                            toast.error(error.response.data.message)
+                        } else {
+
+                            console.log(error)
+                        }
+                    })
+            ) : (
+                toast.error('Please Select Checkbox')
+            )
+        }
+
     }
 
     return (
@@ -86,7 +86,7 @@ const Signup = () => {
                         id="newsletter"
                         type="checkbox"
                         className="w-4 h-4 text-sky-400 border-gray-300 rounded focus:ring-sky-400 focus:outline-none"
-                        onChange={(e) =>setIsChecked(e.target.checked)}
+                        onChange={(e) => setIsChecked(e.target.checked)}
                     />
                     <label className="ml-2 text-xl text-gray-500" htmlFor="newsletter">
                         Subscribe to our newsletter

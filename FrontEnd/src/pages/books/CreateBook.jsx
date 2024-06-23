@@ -13,7 +13,7 @@ const CreateBooks = () => {
   const navigate = useNavigate();
   const handleSaveBook = () => {
     const data = { title, author, publishYear };
-   
+
     axiosInstance.post('/books/', data)
       .then(() => {
         navigate('/');
