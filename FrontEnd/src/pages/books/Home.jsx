@@ -19,7 +19,7 @@ const Home = () => {
   const currentPage = useRef(1);
   const searchTerm = useRef('');
   const filterAuthor = useRef('');
-  
+
 
 
 
@@ -60,13 +60,11 @@ const Home = () => {
 
   }
 
-
-  //////////////////////////////////////////////////////
   const [sortOrder, setSortOrder] = useState('asc');
 
 
 
-  const handleSearchButtonClick =  () => {
+  const handleSearchButtonClick = () => {
     filterAuthor.current = '';
     currentPage.current = 1;
     fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current).then((response) => {
@@ -80,7 +78,7 @@ const Home = () => {
 
   const
     handlePrevious = () => {
-      currentPage.current = currentPage.current -1 ;
+      currentPage.current = currentPage.current - 1;
       console.log('previous', currentPage.current)
       fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current).then((response) => {
         setBooks(response.data)
@@ -90,9 +88,9 @@ const Home = () => {
       });
     }
   const handleNext = async () => {
-   currentPage.current = currentPage.current + 1 ;
+    currentPage.current = currentPage.current + 1;
     console.log('next', currentPage.current);
-    fetchBooks(currentPage.current, 10, searchTerm.current,filterAuthor.current).then((response) => {
+    fetchBooks(currentPage.current, 10, searchTerm.current, filterAuthor.current).then((response) => {
       setBooks(response.data);
       setAuthorized(response.authorized);
       setTotalPage(response.totalPages)
@@ -115,7 +113,7 @@ const Home = () => {
       </div>
       <div class='flex justify-between items-center mb-4'>
         <div class='flex'>
-          <input  
+          <input
             type='text'
             placeholder='Search'
             onChange={(e) => (searchTerm.current = e.target.value)}
@@ -145,19 +143,19 @@ const Home = () => {
             <th className='border border-slate-600 rounded-md max-md:hidden'>Author</th>
             <th
               className='border border-slate-600 rounded-md max-md:hidden cursor-pointer'
-           
+
             >
               Publish Year
-             
+
             </th>
             {authorized && <th className='border border-slate-600 rounded-md'>Operations</th>}
           </tr>
-        </thead>  
+        </thead>
         <tbody>
           {books.map((book, index) => (
             <tr key={book._id} className='h-8'>
               <td className='border border-slate-700 rounded-md text-center'>
-                {(currentPage.current-1)*10 + index+1}
+                {(currentPage.current - 1) * 10 + index + 1}
               </td>
               <td className='border border-slate-700 rounded-md text-center'>{book.title}</td>
               <td className='border border-slate-700 rounded-md text-center max-md:hidden'>{book.author}</td>

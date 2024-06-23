@@ -8,7 +8,7 @@ const authMiddleware = (request, response, next ) => {
   }
 
   try {
-    const decoded = jwt.verify(token, 'jwt-key-uki');
+    const decoded = jwt.verify(token,process.env.KEY);
     console.log('decoded before');
     console.log(decoded);
     next()    

@@ -10,7 +10,9 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   axios.defaults.withCredentials = true;
+
   const handleSubmit = (e) => {
+    console.log(import.meta.env.VITE_API_URL);
 
     const data = { email, password };
     e.preventDefault()

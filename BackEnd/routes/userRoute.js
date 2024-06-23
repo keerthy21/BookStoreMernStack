@@ -48,6 +48,9 @@ router.post('/signup',async (request, response) =>{
 
 router.post('/login',async (request, response) =>{
     try{
+      
+
+        console.log(process.env.KEY);
         const {email, password} = request.body;
         const userr = await User.findOne({ email: email });
         if(!userr){
@@ -64,7 +67,8 @@ router.post('/login',async (request, response) =>{
 
             return response.status(400).send({message: 'Password is incorrect'})    
         }
-        const token =jwt.sign({username:userr.username},'jwt-key-uki' ,{ expiresIn :'1h'}  )
+        console.log(process.env.KEY);
+        const token =jwt.sign({username:userr.username},process.env.KEY ,{ expiresIn :'1h'}  )
         response.cookie('token',token,{httpOnly :true ,  maxAge: 6 * 60 * 60 * 1000})
         return response.status(200).send({ message: 'Login Successfully' ,user: userr.username});
 

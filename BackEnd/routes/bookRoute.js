@@ -33,7 +33,7 @@ router.get('/', async (request, response) => {
         const token = request.cookies.token
 
         try {
-            const decoded = jwt.verify(token, 'jwt-key-uki');
+            const decoded = jwt.verify(token, process.env.KEY);
             authorized = true;
 
         } catch (error) {
@@ -195,7 +195,7 @@ router.post('/review', async (request, response) => {
     try {
         if (!request.body.review &&
             !request.body.rating) {
-            return response.status(400).send({ message: 'Please Send review or rating'})
+            return response.status(400).send({ message: 'Please Send review or rating' })
         }
         const newReview = {
             bookid: request.body.bookid,
@@ -205,7 +205,7 @@ router.post('/review', async (request, response) => {
         }
 
         const review = await Review.create(newReview)
-        return response.status(200).send({sucess})
+        return response.status(200).send({ sucess })
 
     }
     catch (error) {
@@ -220,7 +220,7 @@ router.get('/reviews/:id', async (request, response) => {
         const { id } = request.params
         const book = await Book.findById(id);
         const reviews = await Review.find({ bookid: id });
-        
+
         if (!reviews) {
             return response.status(200).send({ message: 'No reviews' })
 

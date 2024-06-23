@@ -10,7 +10,12 @@ import Login from './pages/authentication/Login'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
+
+ // Load environment variables
+
  const App = () => {
+
   return (
     <div className="App">
     {/* Other components */}
