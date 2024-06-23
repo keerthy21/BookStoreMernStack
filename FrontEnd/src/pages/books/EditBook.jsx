@@ -3,6 +3,8 @@ import axios from 'axios';
 import Spinner from '../../components/Spinner';
 import BackButton from '../../components/BackButton';
 import { useNavigate ,useParams} from 'react-router-dom';
+import Header from '../../components/Header';
+import { toast } from 'react-toastify';
 
  const EditBooks = () => {
  const [title,setTitle] = useState('');
@@ -11,17 +13,20 @@ import { useNavigate ,useParams} from 'react-router-dom';
  const navigate = useNavigate();
 const {id} = useParams();
 useEffect(()=>{
-  setLoading(true);
+ 
   axios.get(` http://localhost:5555/books/${id}`)
   .then((response)=>{
     setAuthor(response.data.author);
     setTitle(response.data.title);
     setPublishYear(response.data.publishYear);
-    setLoading(false)
+  
+    
 
   })
   .catch(error => {
     if (error.response.status == 400) {
+            console.log(error)
+
       toast.error(error.response.data.message)
     } else {
       console.log(error)
@@ -39,22 +44,28 @@ useEffect(()=>{
   axios.defaults.withCredentials = true;
   axios.put(` http://localhost:5555/books/${id}`,data)
   .then(() =>{
-    setLoading(false);
+   
     navigate('/');
 
   })
-  .catch((error)=>{
-   
-    alert('error happend')
+  .catch(error => {
+
+    if (error.response.status == 400) {
+     toast.error(error.response.data.message)
+    } else {
+
+      console.log(error)
+    }
+
 
   })
-
  };
 
 
 
   return (
     <div className='p-4'>
+      <Header isauthorized={true} />
       <BackButton/>
       <h1 className='text-3xl my-4'>Edit Book</h1>
       

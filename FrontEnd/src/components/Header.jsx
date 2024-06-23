@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 
 
 const Header = ({isauthorized}) => {
+    console.log(isauthorized);
     const navigate = useNavigate();
     const username =localStorage.getItem('username');
     const handleLogout = () => {

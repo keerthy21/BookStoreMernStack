@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import BackButton from '../../components/BackButton';
 import { useParams } from 'react-router-dom';
+import Header from '../../components/Header';
 
 const ShowBook = () => {
   const [book, setBook] = useState([]);
@@ -30,9 +31,11 @@ const ShowBook = () => {
 
   return (
     <div className='p-4'>
+      <Header isauthorized={true} />
       <BackButton/>
+      
       <h1 className='text-3xl my-4'> Show Book</h1>
-      {loading ? (<Spinner/>):(
+      
         <div className='flex flex-col border-2  border-sky-400 rounded-x1 w-fit  p-4'>
                   <div className='my-4'>
                     <span className='text-xl mr-4 text-gray-500'>Id</span>
@@ -59,7 +62,7 @@ const ShowBook = () => {
                     <span>{ Date(book.updatedAt).toString()}</span>
                      </div>
         </div>
-      )}
+      
     </div>
   )
 }

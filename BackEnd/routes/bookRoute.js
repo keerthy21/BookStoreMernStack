@@ -7,20 +7,9 @@ const router = express.Router()
 
 
 // get list of authors
-router.get('authors', async (request, response) => {
+router.get('/authors', async (request, response) => {
     try {
-        let authorized = false;
 
-        const token = request.cookies.token
-
-        try {
-            const decoded = jwt.verify(token, 'jwt-key-uki');
-            authorized = true;
-
-        } catch (error) {
-            console.log(error)
-
-        }
 
         const books = await Book.find();
         const authors = books.map(book => book.author.toLowerCase());
@@ -50,9 +39,42 @@ router.get('/', async (request, response) => {
             console.log(error)
 
         }
+        // Pagination
+        const page = parseInt(request.query.page) || 1;
+        const limit = parseInt(request.query.limit) || 10;
 
-        const books = await Book.find();
-        const totalPages = Math.ceil(books.length / 10);
+        // Search AND FILTER
+        let searchFilter = {};
+        let searchQuery ='';
+        if (request.query.search) {
+            searchQuery = request.query.search;
+            searchFilter = {
+                $or: [
+                    { title: { $regex: searchQuery, $options: 'i' } },
+                    { author: { $regex: searchQuery, $options: 'i' } }
+                ]
+            };
+        }
+        else if(request.query.filter){
+            searchQuery =request.query.filter
+             searchFilter = {
+                author: { $eq: searchQuery }  // Exact match for author
+            };
+        }else{
+
+        }
+
+        // Query options for pagination and searching
+        const options = {
+            skip: (page - 1) * limit,
+            limit: limit,
+            collation: { locale: 'en' }, // Optional: for case insensitive search
+        };
+
+        const books = await Book.find(searchFilter, {}, options);
+        const totalCount = await Book.countDocuments(searchFilter);
+
+        const totalPages = Math.ceil(totalCount / 10);
         return response.status(200).json({
             totalPages: totalPages,
             data: books, authorized: authorized
@@ -64,12 +86,6 @@ router.get('/', async (request, response) => {
 
     }
 })
-
-
-
-
-
-
 
 router.use(authMiddleware);
 
