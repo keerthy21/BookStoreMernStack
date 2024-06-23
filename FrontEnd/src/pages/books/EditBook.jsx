@@ -8,7 +8,6 @@ import { useNavigate ,useParams} from 'react-router-dom';
  const [title,setTitle] = useState('');
  const [author,setAuthor] = useState('');
  const [publishYear,setPublishYear] = useState('');
- const [loading,setLoading] = useState('');
  const navigate = useNavigate();
 const {id} = useParams();
 useEffect(()=>{
@@ -21,9 +20,13 @@ useEffect(()=>{
     setLoading(false)
 
   })
-  .catch((error)=>{
-    alert('error happend while editing');
-    console.log(error);
+  .catch(error => {
+    if (error.response.status == 400) {
+      toast.error(error.response.data.message)
+    } else {
+      console.log(error)
+    }
+
 
   })
 
@@ -33,7 +36,6 @@ useEffect(()=>{
 
  const handleEditBook  = () =>{
   const data ={title,author,publishYear};
-  setLoading(true);
   axios.defaults.withCredentials = true;
   axios.put(` http://localhost:5555/books/${id}`,data)
   .then(() =>{
@@ -42,7 +44,7 @@ useEffect(()=>{
 
   })
   .catch((error)=>{
-    setLoading(false);
+   
     alert('error happend')
 
   })
@@ -55,7 +57,7 @@ useEffect(()=>{
     <div className='p-4'>
       <BackButton/>
       <h1 className='text-3xl my-4'>Edit Book</h1>
-      {loading ? (<Spinner/>):''}
+      
       <div className='flex flex-col border-2 border-sky-400 rounded-x1 w-[600px] p-4 mx-auto'>
         <div className='my-4'>
           <label className='text-xl mr-4 text-gray-500'>Title</label>

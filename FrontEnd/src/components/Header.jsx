@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 
 
-const Header = () => {
+const Header = ({isauthorized}) => {
     const navigate = useNavigate();
     const username =localStorage.getItem('username');
     const handleLogout = () => {
@@ -26,7 +26,7 @@ const Header = () => {
     return (
         <header className="bg-gray-800 text-white p-4 flex justify-between items-center">
         <div className="text-xl font-bold">Book Library</div>
-        {username ? (
+        {isauthorized ? (
             <div className="flex items-center space-x-4">
                 <div className="text-sm">Hello, {username}</div>
                 <button

@@ -15,8 +15,14 @@ const DeleteBook = () => {
       .then(() => {
         navigate('/');
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(error => {
+        if (error.response.status == 400) {
+          toast.error(error.response.data.message)
+        } else {
+          console.log(error)
+        }
+
+
       });
 
 

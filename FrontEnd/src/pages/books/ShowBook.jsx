@@ -1,7 +1,6 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Spinner from '../../components/Spinner';
 import BackButton from '../../components/BackButton';
 import { useParams } from 'react-router-dom';
 
@@ -16,11 +15,14 @@ const ShowBook = () => {
     axios.get(` http://localhost:5555/books/${id}`)
     .then((response)=>{
       setBook(response.data);
-      setLoading(false);
 })
-.catch((error) =>{
-  console.log(error);
-  setLoading(false);
+.catch(error => {
+  if (error.response.status == 400) {
+    toast.error(error.response.data.message)
+  } else {
+    console.log(error)
+  }
+
 
 })
 

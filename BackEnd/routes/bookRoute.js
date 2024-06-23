@@ -1,36 +1,72 @@
 import express from "express";
-import {Book} from "../models/bookModels.js"
+import { Book } from "../models/bookModels.js"
 import authMiddleware from "../middleware/auth.js";
 import jwt from 'jsonwebtoken';
 
 const router = express.Router()
 
-// get list of books
-router.get('/', async (request,response) => {
+
+// get list of authors
+router.get('authors', async (request, response) => {
     try {
         let authorized = false;
-        const token =request.cookies.token
-    
-      try {
-          const decoded = jwt.verify(token, 'jwt-key-uki');
-          authorized = true;
-      
+
+        const token = request.cookies.token
+
+        try {
+            const decoded = jwt.verify(token, 'jwt-key-uki');
+            authorized = true;
+
         } catch (error) {
-         console.log(error)
-        
+            console.log(error)
+
         }
-        
+
         const books = await Book.find();
-        return response.status(200).json({count: books.length,
-            data: books, authorized : authorized
+        const authors = books.map(book => book.author.toLowerCase());
+        const uniqueAuthors = [...new Set(authors)];
+        return response.status(200).json({
+            data: uniqueAuthors
         })
 
     } catch (error) {
-        
-        return response.status(500).send({message : error.message})
-        
+
+        return response.status(500).send({ message: error.message })
+
     }
 })
+
+// get list of books
+router.get('/', async (request, response) => {
+    try {
+        let authorized = false;
+        const token = request.cookies.token
+
+        try {
+            const decoded = jwt.verify(token, 'jwt-key-uki');
+            authorized = true;
+
+        } catch (error) {
+            console.log(error)
+
+        }
+
+        const books = await Book.find();
+        const totalPages = Math.ceil(books.length / 10);
+        return response.status(200).json({
+            totalPages: totalPages,
+            data: books, authorized: authorized
+        })
+
+    } catch (error) {
+
+        return response.status(500).send({ message: error.message })
+
+    }
+})
+
+
+
 
 
 
@@ -43,15 +79,19 @@ router.post('/', async (request, response) => {
         if (
             !request.body.title ||
             !request.body.author ||
-            !request.body.publishYear) { return response.status(500).send({ message: 'title ,author and publishYear can not be emty' }) }
-            const newBook = {
-                title : request.body.title ,
-                author: request.body.author,
-                publishYear: request.body.publishYear
+            !request.body.publishYear) { return response.status(400).send({ message: 'title ,author and publishYear can not be emty' }) }
+        if (request.body.publishYear.length != 4 && !/^\d{4}$/.test(request.body.publishYear)) {
+            return response.status(400).send({ message: 'publishYear must be a 4-digit number' })
+        }
 
-            };
-           const book = await Book.create(newBook)
-           return response.status(200).send(book)    
+        const newBook = {
+            title: request.body.title,
+            author: request.body.author,
+            publishYear: request.body.publishYear
+
+        };
+        const book = await Book.create(newBook)
+        return response.status(200).send(book)
     }
     catch (error) {
         console.log(error.message);
@@ -61,22 +101,22 @@ router.post('/', async (request, response) => {
 
 
 // get single book by id
-router.get('/:id', async (request,response) => {
+router.get('/:id', async (request, response) => {
     try {
-       const {id} = request.params
+        const { id } = request.params
         const book = await Book.findById(id);
-        if(!book){
-            return response.status(404).send({message : 'Book not found'})    
+        if (!book) {
+            return response.status(400).send({ message: 'Book not found' })
 
-           }else{
+        } else {
             return response.status(200).json(book)
-           }
-        
+        }
+
 
     } catch (error) {
-        console.log('dfdsf');
-        return response.status(500).send({message : error.message})
-        
+        console.log({ message: error.message });
+        return response.status(500).send({ message: error.message })
+
     }
 })
 
@@ -88,18 +128,20 @@ router.put('/:id', async (request, response) => {
             !request.body.title ||
             !request.body.author ||
             !request.body.publishYear) { return response.status(500).send({ message: 'title ,author and publishYear can not be emty' }) }
+        if (request.body.publishYear != 4 && !/^\d{4}$/.test(request.body.publishYear)) {
+            return response.status(400).send({ message: 'publishYear must be a 4-digit number' })
+        }
 
-            const {id} = request.params
+        const { id } = request.params
 
-          
-           const result = await Book.findByIdAndUpdate(id,request.body)
-           if(!result){
-            return response.status(404).send({message : 'Book not found'})    
+        const result = await Book.findByIdAndUpdate(id, request.body)
+        if (!result) {
+            return response.status(400).send({ message: 'Book not found' })
 
-           }else{
-            return response.status(200).send({message : 'Book Updated Suceesfully'})    
+        } else {
+            return response.status(200).send({ message: 'Book Updated Suceesfully' })
 
-           }
+        }
     }
     catch (error) {
         console.log(error.message);
@@ -110,24 +152,26 @@ router.put('/:id', async (request, response) => {
 //delete the book by id
 router.delete('/:id', async (request, response) => {
     try {
-       
-            const {id} = request.params
 
-          
-           const result = await Book.findByIdAndDelete(id)
-           if(!result){
-            return response.status(404).send({message : 'Book not found'})    
+        const { id } = request.params
 
-           }else{
-            return response.status(200).send({message : 'Book Deleted Suceesfully'})    
 
-           }
+        const result = await Book.findByIdAndDelete(id)
+        if (!result) {
+            return response.status(500).send({ message: 'Book not found' })
+
+        } else {
+            return response.status(200).send({ message: 'Book Deleted Suceesfully' })
+
+        }
     }
     catch (error) {
         console.log(error.message);
         return response.status(500).send({ message: error.message });
     }
 })
+
+
 
 export default router;
 
