@@ -12,11 +12,11 @@ config(); // Load environment variables
 const app = express()
 
 const corsOptions = {
-    origin: 'http://localhost:5173',
+    origin: process.env.BASE_URL,
     credentials: true,            //access-control-allow-credentials:true
     optionSuccessStatus: 200
 }
-
+console.log(process.env.BASE_URL)
 app.use(cors(corsOptions));
 app.use(express.json())
 app.use(cookieParser())
