@@ -24,7 +24,8 @@ app.use('/books', bookRoute)
 app.use('/auth', userRoute)
 
 app.get('/', (req, res) => {
-    console.log(req)
+    console.log('Welocomeeee')
+    console.log(process.env.BASE_URL)
     return res.status(234).send('Welcome to MERN STACK')
 })
 
