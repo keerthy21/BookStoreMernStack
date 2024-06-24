@@ -1,10 +1,10 @@
 import axios from 'axios';
-
+import axiosInstance from '../utils/axiosInstance.js';
 const fetchBooks = async (page, limit, search, filter, sort) => {
     try {
-        axios.defaults.withCredentials = true;
+        
 
-        const response = await axios.get('http://localhost:5555/books', {
+        const response = await axiosInstance.get('/books', {
             params: { page, limit, search, filter, sort }
         });
 

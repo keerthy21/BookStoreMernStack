@@ -1,10 +1,7 @@
 import React from 'react';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance.js';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-
-
-
 
 
 const Header = ({ isauthorized }) => {
@@ -12,7 +9,7 @@ const Header = ({ isauthorized }) => {
     const navigate = useNavigate();
     const username = localStorage.getItem('username');
     const handleLogout = () => {
-        axios.get(` http://localhost:5555/auth/logout`)
+        axiosInstance.get(`/auth/logout`)
             .then(() => {
                 localStorage.clear()
                 navigate('/login');
